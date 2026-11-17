@@ -1,0 +1,7 @@
+{
+  "name": "codeatlas-phase0-semantic-spike",
+  "private": true,
+  "version": "0.0.1",
+  "engines": { "node": ">=22 <25" },
+  "dependencies": { "pyright": "1.1.405", "typescript": "5.8.3" }
+}

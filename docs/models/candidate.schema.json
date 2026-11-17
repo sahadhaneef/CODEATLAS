@@ -1,0 +1,79 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "approved_for_private_source": {
+      "const": false,
+      "default": false,
+      "title": "Approved For Private Source",
+      "type": "boolean"
+    },
+    "deployment": {
+      "const": "local_only",
+      "default": "local_only",
+      "title": "Deployment",
+      "type": "string"
+    },
+    "dimensions": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Dimensions"
+    },
+    "license": {
+      "title": "License",
+      "type": "string"
+    },
+    "max_tokens": {
+      "exclusiveMinimum": 0,
+      "title": "Max Tokens",
+      "type": "integer"
+    },
+    "model_id": {
+      "title": "Model Id",
+      "type": "string"
+    },
+    "normalization": {
+      "title": "Normalization",
+      "type": "string"
+    },
+    "revision": {
+      "pattern": "^[0-9a-f]{40}$",
+      "title": "Revision",
+      "type": "string"
+    },
+    "role": {
+      "enum": [
+        "embedding",
+        "reranker"
+      ],
+      "title": "Role",
+      "type": "string"
+    },
+    "tokenizer": {
+      "title": "Tokenizer",
+      "type": "string"
+    },
+    "truncation": {
+      "title": "Truncation",
+      "type": "string"
+    }
+  },
+  "required": [
+    "model_id",
+    "revision",
+    "role",
+    "license",
+    "dimensions",
+    "tokenizer",
+    "max_tokens",
+    "truncation",
+    "normalization"
+  ],
+  "title": "ModelCandidate",
+  "type": "object"
+}

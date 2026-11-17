@@ -1,0 +1,19 @@
+{
+  "kind": "live_public_https",
+  "approval": "User explicitly approved octocat/Hello-World in this chat",
+  "remote": "https://github.com/octocat/Hello-World",
+  "requested_ref": "7fd1a60b01f91b314f59955a4e4d4e80d8edf11d",
+  "commit_sha": "7fd1a60b01f91b314f59955a4e4d4e80d8edf11d",
+  "tree_sha": "b4eecafa9be2f2006ce1b709d6857b07069b4608",
+  "status": "succeeded",
+  "file_count": 1,
+  "inventory_counts": {"inventoried": 1},
+  "source_view_statuses": [200],
+  "timestamp": "2026-10-30T09:11:46.963622+00:00",
+  "repository_id": "b3aa75c1-dbd4-442d-a547-3a8be675e88e",
+  "job_id": "050177ec-a6a8-4ad7-97ff-dba67a07c1f8",
+  "executed_imported_code": false,
+  "transport": "GitHubSource with DNS-address-pinned TLS and no redirects",
+  "storage": "Fernet envelope in isolated PostgreSQL verification database; key outside database",
+  "worker": "Direct production ingestion service; live broker path not exercised"
+}

@@ -1,0 +1,28 @@
+[
+  {
+    "model_id": "BAAI/bge-small-en-v1.5",
+    "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+    "role": "embedding",
+    "license": "MIT",
+    "dimensions": 384,
+    "tokenizer": "BertTokenizerFast from the same model revision",
+    "max_tokens": 512,
+    "truncation": "No silent truncation; split or reject oversize input before embedding",
+    "normalization": "L2 normalized CLS pooling; proposed baseline, not measured",
+    "deployment": "local_only",
+    "approved_for_private_source": false
+  },
+  {
+    "model_id": "BAAI/bge-reranker-base",
+    "revision": "2cfc18c9415c912f9d8155881c133215df768a70",
+    "role": "reranker",
+    "license": "MIT",
+    "dimensions": null,
+    "tokenizer": "XLMRobertaTokenizerFast from the same model revision",
+    "max_tokens": 512,
+    "truncation": "Joint query/passage budget; split or reject oversize pairs",
+    "normalization": "Raw relevance logit; no calibrated probability",
+    "deployment": "local_only",
+    "approved_for_private_source": false
+  }
+]

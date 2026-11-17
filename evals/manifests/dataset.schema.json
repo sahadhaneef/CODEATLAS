@@ -1,0 +1,78 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "allowed_usage": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Allowed Usage",
+      "type": "array"
+    },
+    "archive_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Archive Sha256",
+      "type": "string"
+    },
+    "commit_sha": {
+      "pattern": "^[0-9a-f]{40}$",
+      "title": "Commit Sha",
+      "type": "string"
+    },
+    "languages": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Languages",
+      "type": "array"
+    },
+    "license": {
+      "title": "License",
+      "type": "string"
+    },
+    "license_review": {
+      "minLength": 1,
+      "title": "License Review",
+      "type": "string"
+    },
+    "provenance": {
+      "minLength": 1,
+      "title": "Provenance",
+      "type": "string"
+    },
+    "repository_url": {
+      "title": "Repository Url",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "split": {
+      "enum": [
+        "fixture",
+        "train",
+        "validation",
+        "test"
+      ],
+      "title": "Split",
+      "type": "string"
+    }
+  },
+  "required": [
+    "repository_url",
+    "commit_sha",
+    "license",
+    "license_review",
+    "allowed_usage",
+    "languages",
+    "archive_sha256",
+    "provenance",
+    "split"
+  ],
+  "title": "DatasetManifest",
+  "type": "object"
+}

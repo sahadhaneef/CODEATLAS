@@ -1,0 +1,89 @@
+services:
+  redis:
+    image: redis:7.4.2-alpine@sha256:02419de7eddf55aa5bcf49efb74e88fa8d931b4d77c07eff8a6b2144472b6952
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes: ["redisdata:/data"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  postgres:
+    image: postgres:17.4-bookworm@sha256:304ab813518754228f9f792f79d6da36359b82d8ecf418096c636725f8c930ad
+    environment:
+      POSTGRES_USER: codeatlas
+      POSTGRES_PASSWORD: local-development-only
+      POSTGRES_DB: codeatlas
+    ports: ["127.0.0.1:5432:5432"]
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/01-role.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U codeatlas -d codeatlas"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  api:
+    build:
+      context: ../..
+      dockerfile: infra/compose/Dockerfile
+    env_file: ../../.env
+    environment:
+      CODEATLAS_DATABASE_URL: postgresql+psycopg://codeatlas_app:local-app-only@postgres:5432/codeatlas
+    ports: ["127.0.0.1:${CODEATLAS_API_PORT:-8000}:8000"]
+    depends_on:
+      postgres: {condition: service_healthy}
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/ready')"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+  migrate:
+    profiles: [tools]
+    build:
+      context: ../..
+      dockerfile: infra/compose/Dockerfile
+    environment:
+      CODEATLAS_DATABASE_URL: postgresql+psycopg://codeatlas:local-development-only@postgres:5432/codeatlas
+    command: ["python", "-m", "alembic", "upgrade", "head"]
+    depends_on:
+      postgres: {condition: service_healthy}
+  worker:
+    profiles: [tools]
+    build:
+      context: ../..
+      dockerfile: infra/compose/Dockerfile
+    env_file: ../../.env
+    environment:
+      CODEATLAS_DATABASE_URL: postgresql+psycopg://codeatlas_app:local-app-only@postgres:5432/codeatlas
+      CODEATLAS_BROKER_URL: redis://redis:6379/0
+    entrypoint: ["python", "-m", "celery", "-A", "codeatlas.queue:app", "worker", "--concurrency=1", "--loglevel=WARNING"]
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    depends_on:
+      postgres: {condition: service_healthy}
+  dispatcher:
+    profiles: [tools]
+    build:
+      context: ../..
+      dockerfile: infra/compose/Dockerfile
+    env_file: ../../.env
+    environment:
+      CODEATLAS_DATABASE_URL: postgresql+psycopg://codeatlas_app:local-app-only@postgres:5432/codeatlas
+      CODEATLAS_BROKER_URL: redis://redis:6379/0
+    entrypoint: ["python", "-m", "codeatlas.queue"]
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    depends_on:
+      postgres: {condition: service_healthy}
+volumes:
+  redisdata:
+  pgdata:
